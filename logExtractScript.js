@@ -8,7 +8,7 @@ const regexTitle = /\[FIRING:1\]\s*([\s\S]*?)\s*Firing alerts:/g;
 const regexResolutionTitle = /\[RESOLVED\]\s*([\s\S]*?)\s*Resolved alerts:/g;
 const regexAlertMessageTime =
   /(?:AM|PM)\s*([\s\S]*?)\s* (?:\[FIRING:1\]|\[RESOLVED\])/g;
-const regexAlertTime = /at(.{6})/g;
+const regexAlertTime = /(?<= at ).{6}/g;
 const regexAlertHostname = "";
 
 let matchNotificationType;
