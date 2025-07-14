@@ -8,7 +8,7 @@ const regexTitle = /\[FIRING:1\]\s*([\s\S]*?)\s*Firing alerts:/g;
 const regexResolutionTitle = /\[RESOLVED\]\s*([\s\S]*?)\s*Resolved alerts:/g;
 const regexAlertMessageTime =
   /(?:AM|PM)\s*([\s\S]*?)\s* (?:\[FIRING:1\]|\[RESOLVED\])/g;
-const regexAlertTime = /(?<= at ).{6}/g;
+const regexAlertTime = /(?<= at )(.*?)(?:AM|PM)/g;
 const regexAlertHostname = "";
 
 let matchNotificationType;
@@ -41,9 +41,9 @@ while (
     matchAlertTime = regexAlertTime.exec(
       document.getElementById("logdatadump").innerText
     );
-    console.log(matchAlertTime[1]);
+    console.log(matchAlertTime[0]);
 
-    addLog(matchTitle[1], matchAlertMessageTime[1], matchAlertTime[1], "");
+    addLog(matchTitle[1], matchAlertMessageTime[1], matchAlertTime[0], "");
     finalData +=
       matchTitle[1] +
       "   " +
@@ -65,12 +65,12 @@ while (
     matchAlertTime = regexAlertTime.exec(
       document.getElementById("logdatadump").innerText
     );
-    console.log(matchAlertTime[1]);
+    console.log(matchAlertTime[0]);
 
     addResolutionLog(
       matchResolutionTitle[1],
       matchAlertMessageTime[1],
-      matchAlertTime[1]
+      matchAlertTime[0]
     );
   }
 
@@ -253,7 +253,16 @@ function renderResolutionTableFromCustomLogData() {
 }
 
 function toMinutes(timeStr) {
-  const [hours, minutes] = timeStr.split(":").map(Number);
+  const [time, modifier] = timeStr.trim().split(" ");
+  let [hours, minutes] = time.split(":").map(Number);
+
+  if (modifier === "PM" && hours !== 12) {
+    hours += 12;
+  }
+  if (modifier === "AM" && hours === 12) {
+    hours = 0;
+  }
+
   return hours * 60 + minutes;
 }
 
