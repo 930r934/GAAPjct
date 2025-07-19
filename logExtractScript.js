@@ -2,7 +2,7 @@ const customLogData = [];
 const customResolutionLogData = [];
 
 //implement type check with square brackets
-const regexNotificationType = /\[(.*?)\]/g;
+const regexNotificationType = /\[(FIRING:1|RESOLVED)\]/g;
 
 const regexTitle = /\[FIRING:1\]\s*([\s\S]*?)\s*Firing alerts:/g;
 const regexResolutionTitle = /\[RESOLVED\]\s*([\s\S]*?)\s*Resolved alerts:/g;
@@ -44,6 +44,7 @@ while (
     console.log(matchAlertTime[0]);
 
     addLog(matchTitle[1], matchAlertMessageTime[1], matchAlertTime[0], "");
+
     finalData +=
       matchTitle[1] +
       "   " +
@@ -55,7 +56,10 @@ while (
     matchResolutionTitle = regexResolutionTitle.exec(
       document.getElementById("logdatadump").innerText
     );
+
     console.log(matchResolutionTitle[1]);
+
+    findAndBreakLogForResolution(matchResolutionTitle[1]);
 
     matchAlertMessageTime = regexAlertMessageTime.exec(
       document.getElementById("logdatadump").innerText
@@ -80,15 +84,7 @@ while (
 console.log(finalData);
 renderTableFromCustomLogData();
 renderResolutionTableFromCustomLogData();
-
-// const regex0 = /(?:AM|PM)\s*([\s\S]*?)\s*\[FIRING:1\]/g;
-// let match0;
-// let finalData0 = '';
-// while ((match0 = regex0.exec(document.getElementById("logdatadump").innerText)) !== null) {
-//     console.log(match0[1]);
-//     finalData0+=match0[1]+'\n';// This logs only the content between the two phrases
-// }
-// console.log(finalData0);
+applyResolutionRowColor();
 
 function addLog(title, alertMessageTime, alertTime, alertHostname) {
   // const title = prompt("Enter fruit name:");
@@ -102,11 +98,6 @@ function addLog(title, alertMessageTime, alertTime, alertHostname) {
     matchingTitleRecord.count += 1;
     matchingTitleRecord.alertTime += `, ${alertTime}`;
     matchingTitleRecord.alertMessageTime += `, ${alertMessageTime}`;
-    console.log(
-      matchingTitleRecord.minAlertTime,
-      matchingTitleRecord.maxAlertTime
-    );
-    console.log(alertTime);
 
     if (toMinutes(matchingTitleRecord.minAlertTime) > toMinutes(alertTime)) {
       matchingTitleRecord.minAlertTime = alertTime;
@@ -125,11 +116,10 @@ function addLog(title, alertMessageTime, alertTime, alertHostname) {
       count: 1,
       minAlertTime: alertTime,
       maxAlertTime: alertTime,
+      resolvedFlag: false,
     };
 
     customLogData.push(logInput);
-    console.log("Fruit added:", logInput);
-    console.log("All fruits:", customLogData);
   }
 }
 
@@ -184,6 +174,14 @@ function addResolutionLog(title, alertMessageTime, alertTime) {
   }
 }
 
+function findAndBreakLogForResolution(title) {
+  let matchingTitleRecord = customLogData.find((log) => log.title === title);
+  if (matchingTitleRecord) {
+    matchingTitleRecord.title += " [RESOLVED]";
+    matchingTitleRecord.resolvedFlag = true;
+  }
+}
+
 function renderTableFromCustomLogData() {
   if (customLogData.length === 0) {
     document.body.insertAdjacentHTML("beforeend", "<p>No data to display.</p>");
@@ -194,6 +192,7 @@ function renderTableFromCustomLogData() {
         <thead>
             <tr>
                 <th>Title</th>
+                <th>Resolved?</th>
                 <th>Alert Message Time</th>
                 <th>Alert Times</th>
                 <th>Alert Hostname</th>
@@ -207,6 +206,8 @@ function renderTableFromCustomLogData() {
   customLogData.forEach((log) => {
     tableHTML += `<tr>
             <td>${log.title}</td>
+            <td class="resolution${log.resolvedFlag}" style="text-align:center;">
+            </td>
             <td>${log.alertMessageTime}</td>
             <td>${log.alertTime}</td>
             <td>${log.alertHostname}</td>
@@ -272,4 +273,12 @@ function produceFinalTable() {
       (logdata) => logdata.title === resdata.title
     );
   });
+}
+
+function applyResolutionRowColor() {
+  var resolvedRecords = document.getElementsByClassName("resolutiontrue");
+  for (let i = 0; i < resolvedRecords.length; i++) {
+    resolvedRecords[i].innerHTML =
+      '            <img src="circle-check-solid.svg" alt="description" width="30" height="20" " />';
+  }
 }
