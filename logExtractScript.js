@@ -177,7 +177,7 @@ function addResolutionLog(title, alertMessageTime, alertTime) {
 function findAndBreakLogForResolution(title) {
   let matchingTitleRecord = customLogData.find((log) => log.title === title);
   if (matchingTitleRecord) {
-    matchingTitleRecord.title += " [RESOLVED]";
+    matchingTitleRecord.title += " [R]";
     matchingTitleRecord.resolvedFlag = true;
   }
 }
@@ -280,5 +280,11 @@ function applyResolutionRowColor() {
   for (let i = 0; i < resolvedRecords.length; i++) {
     resolvedRecords[i].innerHTML =
       '            <img src="circle-check-solid.svg" alt="description" width="30" height="20" " />';
+  }
+
+  var unresolvedRecords = document.getElementsByClassName("resolutionfalse");
+  for (let i = 0; i < unresolvedRecords.length; i++) {
+    unresolvedRecords[i].innerHTML =
+      '            <img src="circle-xmark-solid.svg" alt="description" width="30" height="20" " />';
   }
 }
