@@ -18,33 +18,48 @@
     ></script>
   </head>
   <body>
+    <p>
+      <br />
+      *alerts are proived in increasing times.
+      <br />
+      *logs have "at 00:00 AM/PM". Observed only for logs of today.
+    </p>
+
     <div class="container text-center p-3">
       <h1>POC for Automation</h1>
-      <h3>Alert to Insights</h3>
+      <div>
+        <h3>From alert to insights</h3>
+        <figcaption class="blockquote-footer mt-2">
+          developed by <cite title="Source Title">Name</cite>
+        </figcaption>
+      </div>
     </div>
 
-    <div class="container-md p-1 bg-dark mt-5" id="logtablecontainer"></div>
+    <div class="container-md bg-light p-3 rounded mt-5">
+      <div class="input-group">
+        <span class="input-group-text">Text area for raw logs</span>
+        <textarea
+          class="form-control"
+          aria-label="With textarea"
+          id="logdatadump1"
+        ></textarea>
+        <button class="btn btn-dark w-25" onclick="startRender()">
+          Render data!
+        </button>
+      </div>
+    </div>
     <div
-      class="container-md bg-success mt-3"
+      class="container-md p-1 bg-dark mt-2 text-secondary rounded"
+      id="logtablecontainer"
+    >
+      This is where the tables will be rendered..
+    </div>
+    <div
+      class="container-md bg-success mt-3 rounded"
       id="logresolutiontablecontainer"
     ></div>
 
-    <div class="container-md bg-light p-4 mt-4">
-      <h3 class="mb-5">Once you are ready to go, do one of the following.</h3>
-      <button class="btn btn-dark btn-lg" type="button">Refresh data</button>
-      <button id="extractButton" class="btn btn-success btn-lg" type="button">
-        Produce final table
-      </button>
-      <button
-        id="extractButton"
-        class="btn btn-outline-danger btn-lg"
-        type="button"
-      >
-        Fart!
-      </button>
-    </div>
-
-    <div class="container bg-light p-4 mt-4">
+    <!-- <div class="container bg-light p-4 mt-4">
       <div class="row">
         <div class="col border-2 border-secondary">
           <div class="card p-3">
@@ -71,48 +86,11 @@
           <div class="card p-3"></div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="container-md p-4">
-      <div class="card p-3 border-secondary" id="logdatadump">
-        AM 09:39 [FIRING:1] This will be header 2 Firing alerts: blah blah blah
-        black sheep Alert Funel: somerandomwebsite.com today at 10:00 PM 12:31
-        [FIRING:1] This will be header 3 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 11:00 PM 12:32
-        [FIRING:1] This will be header 2 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 2:00 AM 12:33
-        [FIRING:1] This will be header 5 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 4:00 AM 12:39
-        [FIRING:1] This will be header 6 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 12:00 AM 21:19
-        [RESOLVED] This will be header 2 Resolved alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 11:09 AM 02:33
-        [FIRING:1] This will be header 2 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 9:12 PM 01:24
-        [FIRING:1] This will be header 5 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 7:22 PM 14:10
-        [RESOLVED] This will be header 1 Resolved alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 3:11 PM 02:33
-        [FIRING:1] This will be header 9 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 5:10 PM 23:21
-        [RESOLVED] This will be header 21 Resolved alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 11:11 AM 23:21
-        [RESOLVED] This will be header 21 Resolved alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 11:11 AM 20:21
-        [RESOLVED] This will be header 21 Resolved alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 4:11 PM 09:31
-        [FIRING:1] This will be header 9 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 10:11 PM 23:21
-        [FIRING:1] This will be header 9 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 5:10 PM 09:31
-        [FIRING:1] This will be header 9 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 10:11 PM 23:21
-        [RESOLVED] This will be header 21 Resolved alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 11:11 AM 02:33
-        [FIRING:1] This will be header 43 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 5:10 PM 19:31
-        [FIRING:1] This will be header 34 Firing alerts: blah blah blah black
-        sheep Alert Funel: somerandomwebsite.com today at 10:11 PM
+    <div class="container-md">
+      <div class="card p-3 border-primary mt-5" id="logdatadump">
+        <!-- Log data needs to come here -->
       </div>
     </div>
 

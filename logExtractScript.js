@@ -20,71 +20,78 @@ let matchAlertHostname;
 
 let finalData = "";
 
-while (
-  (matchNotificationType = regexNotificationType.exec(
-    document.getElementById("logdatadump").innerText
-  )) !== null
-) {
-  console.log(matchNotificationType[1]);
+function startRender() {
+  if (document.getElementById("logdatadump1").value == "") return null;
 
-  if (matchNotificationType[1] == "FIRING:1") {
-    matchTitle = regexTitle.exec(
+  document.getElementById("logdatadump").innerText =
+    document.getElementById("logdatadump1").value;
+
+  while (
+    (matchNotificationType = regexNotificationType.exec(
       document.getElementById("logdatadump").innerText
-    );
-    console.log(matchTitle[1]);
+    )) !== null
+  ) {
+    console.log(matchNotificationType[1]);
 
-    matchAlertMessageTime = regexAlertMessageTime.exec(
-      document.getElementById("logdatadump").innerText
-    );
-    console.log(matchAlertMessageTime[1]);
+    if (matchNotificationType[1] == "FIRING:1") {
+      matchTitle = regexTitle.exec(
+        document.getElementById("logdatadump").innerText
+      );
+      console.log(matchTitle[1]);
 
-    matchAlertTime = regexAlertTime.exec(
-      document.getElementById("logdatadump").innerText
-    );
-    console.log(matchAlertTime[0]);
+      matchAlertMessageTime = regexAlertMessageTime.exec(
+        document.getElementById("logdatadump").innerText
+      );
+      console.log(matchAlertMessageTime[1]);
 
-    addLog(matchTitle[1], matchAlertMessageTime[1], matchAlertTime[0], "");
+      matchAlertTime = regexAlertTime.exec(
+        document.getElementById("logdatadump").innerText
+      );
+      console.log(matchAlertTime[0]);
 
-    finalData +=
-      matchTitle[1] +
-      "   " +
-      matchAlertMessageTime[1] +
-      "   " +
-      matchAlertTime[1] +
-      "\n";
-  } else {
-    matchResolutionTitle = regexResolutionTitle.exec(
-      document.getElementById("logdatadump").innerText
-    );
+      addLog(matchTitle[1], matchAlertMessageTime[1], matchAlertTime[0], "");
 
-    console.log(matchResolutionTitle[1]);
+      finalData +=
+        matchTitle[1] +
+        "   " +
+        matchAlertMessageTime[1] +
+        "   " +
+        matchAlertTime[1] +
+        "\n";
+    } else {
+      matchResolutionTitle = regexResolutionTitle.exec(
+        document.getElementById("logdatadump").innerText
+      );
 
-    findAndBreakLogForResolution(matchResolutionTitle[1]);
+      console.log(matchResolutionTitle[1]);
 
-    matchAlertMessageTime = regexAlertMessageTime.exec(
-      document.getElementById("logdatadump").innerText
-    );
-    console.log(matchAlertMessageTime[1]);
+      findAndBreakLogForResolution(matchResolutionTitle[1]);
 
-    matchAlertTime = regexAlertTime.exec(
-      document.getElementById("logdatadump").innerText
-    );
-    console.log(matchAlertTime[0]);
+      matchAlertMessageTime = regexAlertMessageTime.exec(
+        document.getElementById("logdatadump").innerText
+      );
+      console.log(matchAlertMessageTime[1]);
 
-    addResolutionLog(
-      matchResolutionTitle[1],
-      matchAlertMessageTime[1],
-      matchAlertTime[0]
-    );
+      matchAlertTime = regexAlertTime.exec(
+        document.getElementById("logdatadump").innerText
+      );
+      console.log(matchAlertTime[0]);
+
+      addResolutionLog(
+        matchResolutionTitle[1],
+        matchAlertMessageTime[1],
+        matchAlertTime[0]
+      );
+    }
+
+    // This logs only the content between the two phrases
   }
 
-  // This logs only the content between the two phrases
+  console.log(finalData);
+  renderTableFromCustomLogData();
+  renderResolutionTableFromCustomLogData();
+  applyResolutionRowColor();
 }
-
-console.log(finalData);
-renderTableFromCustomLogData();
-renderResolutionTableFromCustomLogData();
-applyResolutionRowColor();
 
 function addLog(title, alertMessageTime, alertTime, alertHostname) {
   // const title = prompt("Enter fruit name:");
@@ -183,6 +190,10 @@ function findAndBreakLogForResolution(title) {
 }
 
 function renderTableFromCustomLogData() {
+  var customLogDataSorted = customLogData.sort((a, b) =>
+    a.title.localeCompare(b.title)
+  );
+
   if (customLogData.length === 0) {
     document.body.insertAdjacentHTML("beforeend", "<p>No data to display.</p>");
     return;
@@ -203,7 +214,7 @@ function renderTableFromCustomLogData() {
         </thead>
         <tbody>`;
 
-  customLogData.forEach((log) => {
+  customLogDataSorted.forEach((log) => {
     tableHTML += `<tr>
             <td>${log.title}</td>
             <td class="resolution${log.resolvedFlag}" style="text-align:center;">
